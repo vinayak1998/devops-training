@@ -1,0 +1,193 @@
+   52  docker trust key generate lerndevops
+   53  ls -l
+   54  docker trust signer add --key lerndevops.pub lerndevops/abinbevdemo
+   55  docker trust signer add --key lerndevops.pub lerndevops lerndevops/abinbevdemo
+   56  docker login 
+   57  docker trust signer add --key lerndevops.pub lerndevops lerndevops/abinbevdemo
+   58  clear
+   59  docker pull alpine 
+   60  docker images 
+   61  docker tag alpine lerndevops/abinbevdemo:alpine-unsigned 
+   62  docker push lerndevops/abinbevdemo:alpine-unsigned
+   63  docker images 
+   64  docker images prune --all
+   65  docker image prune --all
+   66  docker pull lerndevops/abinbevdemo:alpine-unsigned
+   67  docker image prune --all
+   68  export DOCKER_CONTENT_TRUST=1
+   69  docker pull lerndevops/abinbevdemo:alpine-unsigned
+   70  docker tag lerndevops/abinbevdemo:alpine-unsigned lerndevops/abinbevdemo:alpine-signed
+   71  export DOCKER_CONTENT_TRUST=0
+   72  docker pull alpine 
+   73  docker tag alpine:latest lerndevops/abinbevdemo:alpine-signed
+   74  docker trust sign lerndevops/abinbevdemo:alpine-signed
+   75  clear
+   76  docker image prune --all
+   77  docker images 
+   78  export DOCKER_CONTENT_TRUST=1
+   79  docker pull lerndevops/abinbevdemo:alpine-unsigned
+   80  docker pull lerndevops/abinbevdemo:alpine-signed
+
+
+
+https://github.com/lerndevops/edudca/blob/master/Labs/security/docker-content-trust.txt
+
+================================================================
+
+   86  cd /etc/docker/
+   87  ls -l
+   88  docker info 
+   89  df -h /
+   90  clear
+   91  ls -l
+   92  vi daemon.json
+   93  mkdir /usr/docker
+   94  service docker restart 
+   95  service docker status 
+   96  clear
+   97  docker info 
+   98  clear
+   99  docker pull nginx 
+  100  docker images 
+  101  docker inspect nginx
+
+{
+  "debug": true,
+  "data-root": "/usr/docker"
+
+}
+
+
+https://github.com/lerndevops/edudca/blob/master/Labs/docker-ee/About%20daemon.json
+
+
+{
+  "storage-driver": "devicemapper",
+  "storage-opts": [
+    "dm.directlvm_device=/dev/nvme1n1",
+    "dm.thinp_percent=95",
+    "dm.thinp_metapercent=1",
+    "dm.thinp_autoextend_threshold=80",
+    "dm.thinp_autoextend_percent=20",
+    "dm.directlvm_device_force=true"
+  ]
+}
+
+    {
+         "log-driver": "syslog"
+    }
+
+    OR
+
+    {
+         "log-driver": "json-file",
+         "log-opts": {
+          "max-size": "15m"
+         }
+    }
+
+
+
+  sudo vi /lib/systemd/system/docker.service   
+
+  ExecStart=/usr/bin/dockerd -H fd:// -H tcp://0.0.0.0:4243   
+  systemctl daemon-reload
+  sudo service docker restart
+  
+      test: curl http://localhost:4243/version
+
+  45  curl http://172.31.42.34:4243/containers/json 
+   46  docker ps 
+   47  clear
+   48  curl http://172.31.42.34:4243/containers/json 
+   49  curl http://172.31.42.34:4243/images/json 
+
+
+export DOCKER_HOST=172.31.42.34:4243
+
+unset DOCKER_HOST
+logout 
+
+==================================================================
+DOCKER EE SETUP 
+
+
+Step1:
+======
+
+Take minimum 3 servers.
+1. sample server for download launchpad 
+2. Docker Manager (UCP). 8G RAM and 10G disk
+3. Docker Worker (for DTR) 4G RAM
+
+
+Step2:
+=====
+ Set-up a common user and configure SSH connecion using ssh-keygen and ssh-copy-id.
+
+  Step1
+  on all server ( with 2cpu 4gb ram )
+
+  useradd botuser -m -d /home/botuser -s /bin/bash
+  echo -e 'botuser  ALL=(ALL)  NOPASSWD:  ALL' > /etc/sudoers.d/botuser
+  
+  Step2
+  on server1 ( where we will have to install launchpad )
+
+  1) switch to user ( su - botuser )
+  2) run "ssh-keygen" command as user ( this will genereate ssh keys for the user ) 
+
+        3) cd /home/botuser/.ssh 
+  4) cat id_rsa.pub (copy the content)
+
+  Step3: (server2 & server3) 
+
+             swith to the user ( su - botuser )
+       mkdir -p /home/botuser/.ssh
+       touch /home/botuser/.ssh/authorized_keys
+       chmod -R 700 /home/botuser/.ssh
+       vi /home/botuser/.ssh/authorized_keys  (enter the copied   content above)
+
+
+Step3:
+======
+
+On server1 :
+1. sudo wget https://github.com/Mirantis/launchpad/releases/latest/download/launchpad-linux-x64
+2. mv launchpad-linux-x64 launchpad
+3. sudo mv launchpad /usr/bin
+4. sudo chmod 777 /usr/bin/launchpad
+
+Step4 
+
+vi cluster.yml
+
+apiVersion: launchpad.mirantis.com/v1beta2
+kind: UCP
+metadata:
+  name: ucp-swarm
+spec:
+  ucp:
+    installFlags:
+    - --admin-username=admin
+    - --admin-password=passw0rd!
+    - --default-node-orchestrator=swarm
+  hosts:
+  - address: 35.192.187.40 # Private IP address of manager node (8gb machine)
+    role: manager
+    ssh:
+      keyPath: /home/botuser/.ssh/id_rsa # private key generated
+      user: botuser # the user you create
+    privateInterface: ens4 # ip a command gives this .. normally eth0. varies with envs
+
+  - address: 34.70.200.211 # IP address of worker
+    role: worker
+    ssh:
+      keyPath: /home/botuser/.ssh/id_rsa
+      user: botuser
+    privateInterface: ens4
+
+step5: 
+
+launchpad register # just give the values as it asked
+launchpad apply # this takes time and sets up Docker UCP.

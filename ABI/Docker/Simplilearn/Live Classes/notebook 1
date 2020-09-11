@@ -1,0 +1,926 @@
+naresh -- not ok with lab
+Girraj - Ok with lab
+Vinayak -- not ok
+Atul - not o
+Shiv not ok
+prashant - 
+yanshu
+Pulkit- not ok
+Nikhil - Not able to
+-njal
+Utkarsh - not ok
+
+
+=======================================================================
+
+username  --- devops
+password -- jdokuans
+
+3.131.98.128
+13.58.163.218
+52.14.161.89
+3.22.117.133
+3.131.153.251
+18.218.184.204
+3.16.186.103
+18.188.95.32
+3.129.148.209
+3.129.248.111
+3.131.119.105
+3.135.232.180
+
+===================================================================
+
+uninstall Docker on ubuntu 
+
+sudo su -
+apt-get purge docker-ce docke-ce-cli
+apt autoremove
+
+Install Docker on Ubuntu:
+
+  sudo su -
+
+  sudo apt-get update
+        sudo apt-get install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+  sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+  sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+  sudo apt-get update
+  sudo apt-get install -y docker-ce docker-ce-cli containerd.io
+
+
+
+validate: 
+
+docker -v
+service docker status 
+
+==============================================================
+
+   52  docker image ls
+   53  docker image prune --all
+   54  clear
+   55  docker image ls
+   56  docker pull tomcat
+   57  docker image ls 
+   58  docker pull nginx 
+   59  clear
+   60  docker pull ubuntu 
+   61  docker pull alpine 
+   62  clear
+   63  docker image ls
+   64  docker image inspect tomcat
+   65  clear
+   66  docker image ls
+   67  docker image rm alpine
+   68  docker image ls
+   69  history 
+
+==============================================================
+
+   71  docker image --help 
+   72  clear
+   73  docker images 
+   74  docker run -d -P tomcat:latest
+   75  docker ps 
+   76  docker run -d -P tomcat:latest
+   77  docker ps 
+   78  clear
+   79  docker run -d -P nginx:latest
+   80  docker ps 
+   81  docker stop 4dbc15a205dd      
+   82  docker stop nervous_yalow
+   83  docker ps 
+   84  docker ps -a 
+   85  docker start adoring_antonelli nervous_yalow
+   86  docker ps 
+   87  clear
+   88  docker ps 
+   89  docker restart nervous_yalow nostalgic_rosalind compassionate_mccarthy
+   90  docker ps 
+   91  docker kill adoring_antonelli nervous_yalow
+   92  docker ps 
+   93  docker ps -a
+   94  clear
+   95  docker ps 
+   96  docker run --name naresh -d tomcat:latest 
+   97  docker ps 
+   98  docker rename crazy_jones hello
+   99  docker ps 
+  100  docker stats 
+  101  docker logs fabaa7541cd4
+  102  clear
+  103  docker ps 
+  104  docker inspect hello
+  105  clear
+  106  docker ps 
+  107  docker rm -f naresh 2a91d978d1e1 hello compassionate_mccarthy
+  108  docker ps 
+===========================================================
+
+
+Ctrl pq  --- to comeout of cotnainer 
+
+
+  117  docker run -d  tomcat:latest 
+  118  docker ps 
+  119  clear
+  120  docker images 
+  121  docker run -d ubuntu:latest 
+  122  docker ps 
+  123  docker ps -a 
+  124  docker run -d ubuntu:latest sleep 60
+  125  docker ps -a 
+  126  clear
+  127  docker ps -a 
+  128  clear
+  129  docker run -it ubuntu:latest /bin/bash
+  130  docker ps 
+  131  docker exec -it 5e9616f99b10 /bin/bash 
+  132  docker exec 5e9616f99b10 ls -l
+  133  docker exec 5e9616f99b10 cat naresh.txt
+  134  docker exec 5e9616f99b10 apt-get update 
+  135  clear
+  136  docker ps 
+  137  docker exec 44012217a734 ls -l
+  138  docker exec 44012217a734 ls -l logs/
+  139  docker exec 44012217a734 cat logs/catalina.2020-09-07.log
+  140  clear
+
+============================================================
+
+
+  145  systemctl status docker 
+  146  systemctl 
+  147  systemctl status docker 
+  148  qq
+  149  systemctl enable docker 
+  150  systemctl disable  docker 
+  151  cd /lib/systemd/system
+  152  ls -l
+  153  vi docker.service 
+  154  clear
+  155  systemctl enable docker 
+
+
+=============================================================
+
+  163  docker rm -f `docker ps -qa`
+  164  clear
+  165  apt-get update 
+  166  clear
+  167  apt-get install -y nginx 
+  168  clear
+  169  service nginx status 
+  170  hostname -i
+  171  cd /etc/nginx/
+  172  ls -l
+  173  cd conf.d/
+  174  ls -ltrh
+  175  cd ..
+  176  vi nginx.conf
+  177  cd /etc/nginx/sites-enabled
+  178  ls -l
+  179  vi default 
+  180  clear
+  181  netstat -anp | grep 80
+  182  hostname -i
+  183  curl 172.31.17.61:80
+  184  clear
+  185  cd /usr/share/nginx/html/
+  186  ls -ltrh
+  187  cat index.html 
+  188  echo "hi there cat index.html  " > index.html 
+  189  cat index.html 
+  190  cd /var/www/html/
+  191  ls -l
+  192  echo "hi there " > index.nginx-debian.html 
+  193  cat index.nginx-debian.html 
+  194  cd 
+  195  clear
+  196  docker ps 
+  197  docker run -d nginx:latest
+  198  docker ps 
+  199  apt-get pruge nginx 
+  200  apt purge nginx 
+  201  ps -ef|grep nginx 
+  202  service nginx stop 
+  203  apt purge nginx 
+  204  pt autoremove
+  205  apt autoremove
+  206  clear
+  207  docker ps 
+  208  netstat -anp | grep 80
+  209  clear
+  210  docker ps 
+  211  docker run -d -P nginx:latest 
+  212  docker ps 
+  213  hostname -i
+  214  curl 172.31.17.61:80
+  215  curl 172.31.17.61:32779
+  216  clear
+  217  docker ps 
+  218  docker run -d -p 9080:80 nginx:latest 
+  219  docker ps 
+
+
+========================================================
+
+  218  docker run -d -p 9080:80 nginx:latest 
+  219  docker ps 
+  220  history 
+  221  clear
+  222  docker pull ubuntu:16.04
+  223  docker images 
+  224  docker run -it ubuntu:16.04 /bin/bash 
+  225  docker ps 
+  226  docker commit -m "installed vim" 4d281b4b8db1 myubuntu:v1
+  227  docker images 
+  228  docker history myubuntu:v1
+
+=========================================================
+
+DAY2
+
+=========================================================
+
+
+
+   83  docker exec -it c92059746d2b /bin/bash 
+   84  clear
+   85  docker ps 
+   86  docker images 
+   87  docker hisotry myubuntu:v1
+   88  docker history myubuntu:v1
+   89  docker export c92059746d2b -o myimage.tgz 
+   90  ls -l
+   91  docker import myimage.tgz
+   92  docker images 
+   93  docker history 1b7e48af50c7
+
+
+vi dockerfile 
+
+FROM ubuntu:16.04
+RUN apt-get update
+RUN apt-get install -y vim 
+RUN touch naresh.txt
+RUN echo "hello there" > naresh.txt
+
+docker build -f dockerfile -t mybuntu:v4 .
+
+
+
+=================================================
+vi index.html
+    my docker image v1
+
+
+FROM ubuntu:16.04
+
+RUN apt-get update
+RUN apt-get install -y nginx 
+COPY index.html /var/www/html/
+COPY index.html /usr/share/nginx/html/
+
+EXPOSE 80
+CMD ["/usr/sbin/nginx", "-g", "daemon off;"]  ## JSON Format
+# CMD /usr/sbin/nginx -g "daemon off;"  ## Shell Format
+
+================================================
+
+FROM openjdk:8u232-jdk-slim 
+
+RUN mkdir /opt/tomcat
+RUN wget http://www-us.apache.org/dist/tomcat/tomcat-8/v8.5.57/bin/apache-tomcat-8.5.57.tar.gz /tmp/
+RUN cd /tmp && tar xvfz apache-tomcat-8.5.57.tar.gz
+RUN mv /tmp/apache-tomcat-8.5.57/* /opt/tomcat/
+
+EXPOSE 8080
+ENTRYPOINT ["/opt/tomcat/bin/catalina.sh", "run"]
+
+================================================
+
+FROM python:2.7.11-slim
+RUN pip install --upgrade pip
+RUN pip install requests flask
+RUN mkdir mypyapp
+COPY myapp.py mypyapp/
+WORKDIR mypyapp
+EXPOSE 3000
+ENTRYPOINT ["python", "myapp.py"]
+
+
+
+vi myapp.py
+
+from flask import Flask, redirect, url_for, render_template, request
+import json, sys, requests, os, ssl, urllib2, base64, time, io
+import socket
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+from pprint import pprint
+
+app = Flask(__name__)
+app.debug = True
+
+@app.route('/')
+
+def gethname():
+    return socket.gethostname()
+
+if __name__ == '__main__':
+         app.run(host='0.0.0.0', port=3000)
+
+
+==============================================================
+
+FROM alpine
+RUN touch hell.txt
+ENTRYPOINT ["sh"]
+CMD ["-c", "sleep 60"]
+
+
+FROM alpine
+RUN touch hell.txt
+ENTRYPOINT ["sh", "-c", "sleep 60"]
+
+FROM alpine
+RUN touch hell.txt
+CMD ["sh", "-c", "sleep 60"]
+
+
+============================================================
+
+
+Dockerfiles allow us to build our own images containing any software we need. However, it is important to ensure that our Dockerfiles are built to produce small, efficient images that do not contain unnecessary data. In this lesson, we will briefly discuss some general tips for creating efficient images. We will also demonstrate how to use multi-stage builds to significantly decrease image size in certain situations.
+
+Relevant Documentation
+https://docs.docker.com/develop/develop-images/dockerfile_best-practices/
+https://docs.docker.com/develop/develop-images/multistage-build/
+Lesson Reference
+Create some project directories:
+
+cd ~/
+mkdir efficient
+mkdir inefficient
+cd inefficient
+Create the source code file:
+
+vi helloworld.go
+package main
+import "fmt"
+func main() {
+    fmt.Println("hello world")
+}
+Create the Dockerfile:
+
+vi Dockerfile
+FROM golang:1.12.4
+WORKDIR /helloworld
+COPY helloworld.go .
+RUN GOOS=linux go build -a -installsuffix cgo -o helloworld .
+CMD ["./helloworld"]
+
+
+Build and test the inefficient image:
+
+docker build -t inefficient .
+docker run inefficient
+docker image ls
+Switch to the efficient project directory and copy the files from the inefficient project:
+
+cd ~/efficient
+cp ../inefficient/helloworld.go ./
+cp ../inefficient/Dockerfile ./
+Change the Dockerfile to use a multi-stage build:
+
+vi Dockerfile
+
+FROM golang:1.12.4 AS compiler
+WORKDIR /helloworld
+COPY helloworld.go .
+RUN GOOS=linux go build -a -installsuffix cgo -o helloworld .
+
+FROM alpine:3.9.3
+WORKDIR /root
+COPY --from=compiler /helloworld/helloworld .
+CMD ["./helloworld"]
+Build and test the efficient image:
+
+docker build -t efficient .
+docker run efficient
+docker image ls
+
+================================================================
+
+  183  docker push mygoapp:v2
+  184  clear
+  185  docker images 
+  186  docker tag mygoapp:v2 lerndevops/abinbevdemo:goapp-v1
+  187  docker images 
+  188  docker push lerndevops/abinbevdemo:goapp-v1
+
+
+  200  docker rm -f `docker ps -qa`
+  201  clear
+  202  docker ps 
+  203  docker run -d -p 5000:5000 --restart always --name registry registry:2
+  204  docker ps 
+  205  history 
+  206  clear
+  207  docker ps 
+  208  docker login 
+  209  docker login localhost:5000
+  210  docker images 
+  211  docker tag mybuntu:v4 localhost:5000/naresh/myubuntu:v1
+  212  clear
+  213  docker images 
+  214  docker push localhost:5000/naresh/myubuntu:v1 
+  215  docker image prune --all 
+  216  docker images 
+  217  clear
+  218  docker pull localhost:5000/naresh/myubuntu:v1
+
+============================================================
+
+  243  docker service create --name mysvc --replicas 7 -p 9080:80 nginx 
+  244  docker service ls 
+  245  docker service inspect y4imcuefvger
+  246  clear
+  247  docker service ls 
+  248  docker service ps mysvc 
+  249  docker node ls
+  250  docker node ps ip-172-31-7-26
+  251  docker node ps ip-172-31-7-106
+  252  docker node ps ip-172-31-8-72
+  253  docker ps 
+
+  259  docker service ls
+  260  docker service scale mysvc=14
+  261  docker service ps mysvc 
+  262  docker service scale mysvc=3
+  263  docker service ps mysvc 
+  264  clear
+  265  docker service update mysvc --replicas 6
+  266  docker service ps 
+  267  docker service ls 
+  268  docker service update mysvc --replicas 8 --image nginx:1.17.10
+  269  docker service ls 
+  270  clear
+  271  docker service update --help 
+  272  clear
+  273  docker service ps mysvc 
+  274  docker service ps mysvc | gre Running 
+  275  clear
+  276  docker service ps mysvc | grep Running 
+  277  docker service ls 
+  278  clear
+  279  docker service create --name myapp --replicas 5 -p 3000:3000 lerndevops/samplepyapp:v1
+  280  hostname -i
+  281  docker ps 
+
+=====================================================
+
+version: '3'
+services:
+  mysvc:
+    image: nginx
+    ports: 
+      - '9080:80'
+    deploy:
+      replicas: 5
+  myapp:
+    image: tomcat
+    ports:
+      - '9090:8080'
+    deploy: 
+      replicas: 5
+  mydb:
+    image: redis
+    ports: 
+      - '6379:6379'
+    deploy: 
+      replicas: 2
+
+  288  docker service create --name mytomcat --mode global  -p 9090:8080 tomcat
+  289  docker service ls
+  290  docker service logs mysvc
+  291  clear
+  292  docker service ps mysvc 
+  293  docker service logs tj9citgd20lm
+  294  docker inspect tj9citgd20lm
+  295  clear
+  296  docker ps 
+  297  clear 
+  298  vi compose.yml
+  299  docker service ls
+  300  docker service rm myapp mysvc mytomcat
+  301  docker service ls
+  302  docker stack deploy -c compose.yml mystack 
+  303  docker service ls
+  304  docker stack ls 
+
+===========================================================
+
+version: '3.7'
+services:
+  springbootapp:
+    image: lerndevops/springboot-mongo-app:latest
+    deploy:
+      replicas: 4
+#      placement:
+#        constraints:
+#          - node.labels.role==app
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: 150M
+    ports:
+      - "9090:8080"
+    depends_on:
+      - mongo
+  mongo:
+    image: lerndevops/mongo
+    deploy:
+      replicas: 1
+#      placement:
+#        constraints:
+#          - node.labels.role==db
+      restart_policy:
+        condition: on-failure
+    ports: 
+      - "27017:27017"
+
+=================================================================
+
+version: "3"
+services:
+
+  redis:
+    image: redis:alpine
+    networks:
+      - frontend
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 2
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+  db:
+    image: postgres:9.4
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: "db"
+      POSTGRES_HOST_AUTH_METHOD: "trust"  
+    networks:
+      - backend
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+  vote:
+    image: dockersamples/examplevotingapp_vote:before
+    ports:
+      - 5000:80
+    networks:
+      - frontend
+    depends_on:
+      - redis
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 2
+      restart_policy:
+        condition: on-failure
+  result:
+    image: dockersamples/examplevotingapp_result:before
+    ports:
+      - 5001:80
+    networks:
+      - backend
+    depends_on:
+      - db
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 2
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+
+  worker:
+    image: dockersamples/examplevotingapp_worker
+    networks:
+      - frontend
+      - backend
+    depends_on:
+      - db
+      - redis
+    deploy:
+      mode: replicated
+      replicas: 1
+      labels: [APP=VOTING]
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
+        window: 120s
+      placement:
+        constraints: [node.role == manager]
+
+  visualizer:
+    image: dockersamples/visualizer:stable
+    ports:
+      - "8080:8080"
+    stop_grace_period: 1m30s
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+
+networks:
+  frontend:
+  backend:
+
+volumes:
+  db-data:
+
+========================================================
+
+yaml / yml  -- data serialization lang -- represeting the data in a structured format 
+
+thumb rule --  indentation -- spaces -- Stritcly NO TABS
+
+3 data structures in the format Key & value pairs 
+
+scalars
+
+a: 5
+b: 5.6
+name: naresh
+------------------------------
+dictnary / map 
+
+car:
+  name: bmw
+  color: red
+  engine: 3L
+  model: sadan  
+---------------------------------------------
+list / array
+
+cars:
+ - bmw:
+     color: white
+     engine: 3.5L
+ - audi
+ - RR
+ - maruti
+
+=====================================================
+
+  313  docker stack deploy -c compose2.yml myapp
+  314  docker stack ls 
+  315  docker service ls
+  316  docker service logs ozm9mcyacvfg
+  317  docker service inspect mxdi538youza
+  318  cat compose2.yml 
+  319  docker service ls 
+  320  docker service ps myapp_springbootapp
+  321  docker inspect sd283zxpx573
+  322  clear
+  323  docker node ls
+  324  docker node inspect ip-172-31-7-26
+  325  clear
+  326  docker node ls
+  327  docker node update ip-172-31-7-106 --label-add role=app
+  328  docker node inspect ip-172-31-7-106 
+  329  clear
+  330  docker service ls
+  331  docker node ls 
+  332  docker node update ip-172-31-8-72 --label-add role=db
+  333  docker node ls 
+  334  docker service ls
+  335  docker service scale myapp_mongo 0
+  336  docker service scale myapp_mongo=0
+  337  docker service ls
+  338  clear
+
+=====================================================
+
+  341  docker node ls 
+  342  clear
+  343  docker node ls 
+  344  docker node rm ip-172-31-8-72
+  345  docker node ls 
+  346  docker swarm join-token worker 
+  347  docker swarm join-token manager 
+  348  docker node ls 
+  349  docker node promote ip-172-31-7-106
+  350  docker node ls 
+  351  docker node demotee ip-172-31-7-106
+  352  docker node demote ip-172-31-7-106
+  353  docker node demote ip-172-31-8-72
+  354  clear
+  355  docker node ls
+  356  docker node promote ip-172-31-8-72
+  357  docker node promote ip-172-31-7-106
+  358  docker node ls
+  359  service docker status 
+  360  service docker stop 
+  361  docker node ls
+  362  clear
+  363  service docker start 
+  364  hisotry 
+  365  history 
+
+
+===========================================================================
+
+DAY3 
+
+=========================================================================
+
+on the master node 
+
+   50  docker swarm init 
+   51  docker node ls
+   52  docker node --help 
+   53  docker node inspect ip-172-31-35-109
+   54  clear
+   55  docker node ls
+   56  docker node rm ip-172-31-39-223
+   57  docker node ls
+   58  docker node rm ip-172-31-35-109
+   59  docker node rm ip-172-31-35-109 --force 
+   60  docker node ls
+   61  clear
+   62  docker swarm --help 
+   63  docker swarm join-token 
+   64  docker swarm join-token worker
+   65  docker swarm join-token manager 
+   66  docker node ls
+
+
+on the worker node 
+
+   33  docker swarm join --token SWMTKN-1-52hfvkqeu26tkzw4h3ie6xx7gwxeuro9qgjdp1nklx5ttblytw-ag87m9bacrnyxpxu5qyku48jg 172.31.36.139:2377
+   34  docker swarm leave
+
+
+---------------------------------------------------------------------------
+
+   73  docker node ls
+   74  docker service create --name mysvc --replicas 5 -p 8080:80 nginx 
+   75  docker service ls
+   76  docker service ps mysvc 
+   77  docker node ls 
+   78  docker service ls
+   79  docker node ls 
+   80  docker node update --help 
+   81  clear
+   82  docker node ls
+   83  docker node update ip-172-31-35-109 --availability pause
+   84  docker node ls
+   85  docker service create --name myapp --replicas 4 -p 9080:8080 tomcat
+   86  docker node ls
+   87  docker service ps myapp 
+
+=====================================================================
+
+   42  docker swarm leave 
+   43  docker info 
+   44  clear
+   45  docker volume ls
+   46  docker volume create myvol
+   47  docker volume ls
+   48  docker volume inspect myvol
+   49  cd /var/lib/docker/volumes/myvol/_data
+   50  ls -l
+   51  cd 
+   52  clear
+   53  docker run -d -P nginx 
+   54  docker ps 
+   55  docker exec -it fe0ab3cae371 /bin/bash 
+   56  clear
+   57  docker ps 
+   58  docker run -d -P -v myvol:/var/log/nginx nginx 
+   59  docker inspect 6d428e3335a63
+   60  cd /var/lib/docker/volumes/myvol/_data/
+   61  ls -l
+   62  cat access.log 
+   63  cd ..
+   64  cd 
+   65  clear
+   66  docker volume create readdata
+   67  docker volume inspect readdata
+   68  docker run -d -P -v readdata:/usr/share/nginx/html nginx 
+   69  cd /var/lib/docker/volumes/readdata/_data
+
+   99  docker volume ls 
+  100  docker volume rm readdata
+  101  cd /var/lib/docker/volumes/readdata/_data/
+  102  clear
+  103  docker volume ls 
+  104  docker run -d -P -v readdata:/usr/share/nginx/html nginx 
+  105  docker volume ls 
+  106  docker run -d -P --mount source=myvol2,target=/usr/local/tomcat/logs tomcat
+  107  docker volume ls 
+  108  cd /var/lib/docker/volumes/myvol2/_data/
+  109  ls -l
+
+
+docker service create -d \
+  --name nfs-service \
+  --mount 'type=volume,source=nfsvolume,target=/app,volume-driver=local,volume-opt=type=nfs,volume-opt=device=:/var/docker-nfs,volume-opt=o=addr=10.0.0.10' \
+  nginx:latest
+
+
+  120  docker service create --name mysvc --mount type=volume,source=myvol,target=/usr/local/tomcat/logs --replicas 6 -p 9080:8080 tomcat
+  121  docker volume ls
+
+
+  129  docker volume create --driver vieux/sshfs -o sshcmd=testuser@172.31.39.223:/home/sshvol -o password=admin sshvolume
+  130  docker plugin install --grant-all-permissions vieux/sshfs
+  131  docker volume create --driver vieux/sshfs -o sshcmd=testuser@172.31.39.223:/home/sshvol -o password=admin sshvolume
+  132  docker volume ls 
+  133  docker volume inspect sshvolume
+  134  docker run -d -P -v sshvolume:/usr/local/tomcat/logs tomcat 
+  135  clear
+  136  docker volume ls 
+  137  docker run -d -P --volume-driver vieux/sshfs --mount source=sshvolume=testuser@172.31.39.223:/home/sshvol,volume-opt=password=admin tomcat
+  138  docker run -d -P --volume-driver vieux/sshfs --mount source=sshvolume,target=/usr/local/tomcat/logs,volume-opt=testuser@172.31.39.223:/home/sshvol,volume-opt=password=admin tomcat
+  139  docker run -d -P --mount type=volume,--volume-driver=vieux/sshfssource=sshvolume,target=/usr/local/tomcat/logs,volume-opt=testuser@172.31.39.223:/home/sshvol,volume-opt=password=admin tomcat
+  140  docker run -d -P --volume-driver vieux/sshfs --mount type=volume,source=sshvolume,target=/usr/local/tomcat/logs,volume-opt=testuser@172.31.39.223:/home/sshvol,volume-opt=password=admin tomcat
+  141  docker run -d -P --mount type=volume,volume-driver=vieux/sshfs,source=sshvolume,target=/usr/local/tomcat/logs,volume-opt=testuser@172.31.39.223:/home/sshvol,volume-opt=password=admin tomcat
+
+  122  docker service create --name mysvc1 --mount type=bind,source=/tmp/hellologs,target=/usr/local/tomcat/logs --replicas 6 -p 9081:8080 tomcat
+
+
+=========================================================================
+
+  137  docker network ls
+  138  docker run --name cont1 -d alpine sleep 3600
+  139  docker run --name cont2 -d alpine sleep 3600
+  140  docker ps 
+  141  docker inspect 643b51ef1b62
+  142  ifconfig 
+  143  clear
+  144  docker ps 
+  145  docker exec 5880bee36812 hostname -i
+  146  docker exec cont1 hostname -i
+  147  docker exec cont1 ping 172.17.0.3
+  148  docker exec cont2 ping 172.17.0.2
+  149  clear
+  150  docker network ls
+  151  docker 
+  152  clear
+  153  docker network ls
+  154  docker network create --driver bridge mybridge 
+  155  docker network ls
+  156  ifconfig 
+  157  clear
+  163  docker run --name cont3 --network mybridge -d alpine sleep 3600
+  164  docker run --name cont4 --network mybridge -d alpine sleep 3600
+  165  clear
+  166  docker ps 
+  167  docker exec cont1 hostname -i 
+  168  docker exec cont2 hostname -i 
+  169  docker exec cont3 hostname -i 
+  170  docker exec cont4 hostname -i 
+  171  docker exec cont1 ping 172.19.0.2
+  172  docker exec cont1 ping 172.19.0.3
+  173  docker exec cont3 ping 172.19.0.3
+
+
+  184  docker run -d -P --network host nginx 
+  185  docker ps 
+  186  netstat -nap |grpe 80
+  187  netstat -nap |grep 80
+  188  clear
+  189  docker run -d -P --network host nginx 
+  190  docker ps -a 
+  191  docker logs cab72ec06000
+  192  clear
+  193* docker networ
+  194  docker run -d -P --network none alpine sleep 3600
+  195  docker ps 
+  196  docker exec 24cf88cbbe1e ifconfig 
+  197  docker exec a1b3dbcfde5e hostname -i
+  198  docker exec a1b3dbcfde5e ping 172.17.0.2
+  199  docker run -d --network container:a1b3dbcfde5e nicolaka/netshoot
+  200  docker ps 
+  201  docker exec a1b3dbcfde5e hostname -i 
+  202  docker ps -a 
+  203  docker logs 778c4b13e991
+  204  docker run -d --network container:a1b3dbcfde5e nicolaka/netshoot sleep 3600
+  205  docker ps 
+  206  docker exec 112f2f40f5e9 hostname -i
+  207  docker exec a1b3dbcfde5e hostname -i
+  208  docker exec 112f2f40f5e9 curl localhost:80
+  209  docker exec 112f2f40f5e9 ping 172.31.35.109
+  210  docker exec a1b3dbcfde5e ping 172.31.35.109
