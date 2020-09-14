@@ -1,0 +1,297 @@
+kubeadm : utility which helps us prepare master and worker nodes -- upgrade/uninstall
+kubelet : is process/agent that is responsible for master and worker node communication
+
+- must have at least 3 master nodes in a cluster
+
+kubeadm init
+kubeadm join
+
+worker nodes aka minions
+
+other containersization technologies apart from docker -> 
+1) rocket
+2) lxc
+3) containerd
+
+- when using k8 as an orchestrator, no need to use just docker for containerisation. 
+hence it is flexible towards any containerizaton platform.
+
+- container runtime - the containerisation tech being used with k8
+
+container networking solution
+1) calico
+2) weave
+3) contv
+4) flannel
+5) canal
+
+k8 supports CNI (container netowrking interface) ,set of stds and roles
+
+-differences b/w k8 and docker swarm
+1) docker swarm comes up w a lot of defaults (eg default overlay networks, container networking model),
+hence not as flexible as k8.
+2) also, if i use doceswarm , i can inly use docker as the containerisation technology, but with k8
+as stated above, can choose anything.
+3) k8 has many more APIs and API support
+4) k8 provides autoscaling(event based) of infra, unlike docker swarm
+   example, 1000 requests -> keep 10 containers, 2000 requests -> scale to 20 containers
+5) installation process is also entirely seperate
+
+
+- kubectl (needs to be installed, from wherever you need to interact with the master)
+the client can reside anywhere it wants to be
+
+kubectl is a client utility, helps us to interact witht the master, never interacts with a client
+mandatory
+adding, joining, deleting nodes, etc.
+
+commands -> 
+kubectl get nodes
+kubectl create
+kubectl delete
+...
+
+kubelet is for master node communication
+
+--------------------------------------------------------
+
+installation methods:
+kubeadmetc/kubernetes/manifests/
+kubernetes the hard way
+
+kubernetes is offered as paas by all cloud providers
+1) AWS -EKS
+2) Google - GKE 
+3) Azure - AKS
+
+
+Master node(can also work as a worker node) components:
+1) API server -> fetched the data from Db, updates and delted data from DB
+2) etcd (cluster store)  -> - internal key value pair nased DB
+                            - stores the entire cluster state always.
+                            - serves the output for kubectl get nodes command.
+                            - should not be interacted with directly, only API server
+                            should do it.
+3) scheduler
+4) controller manager
+5) Core DNS
+6) - 9)  all the worker node components
+
+
+Worker node:
+1) kubelet,
+2) kube proxy
+3) weave
+4) container runtime (docker)
+
+
+
+kubectl run mycont --image=mginx
+this commnad goes to API server in master node
+APi server internally asks the scheduler component
+scheduler component is responsible to schedule this request onto a suitable node.
+
+scheduler identifies a node based on certain conditions, validates a node and 
+all its conditions and chooses the best node
+
+let scheduler decide upon node worker 1. scheduler doesn't talk directly to worker 1
+now api server communicates to the kubelet (of the worker 1 node), issues the request to it.
+
+*ONLY API SERVER CAN TALK TO THE KUBELET* it talks to it every 15 seconds and keeps updating etcd accordingly
+
+in the worker 1 node, kubelet now connects to container runtime (eg docker)
+docker runtme will pull the image run the container amd lets the status known back to kublet that 
+container is now running.
+kueblet in turn lets the API server in the master know. API server then updates etcd.
+
+controller manager responsibility is to maintain the desired state of the cluster.
+how does it do that?
+might talk to the api server which can talk to the scheduler.
+
+WEAVE Network running across all the ndoes:
+-whenever in worker node, kubelet asks the runtime to create a container, it also talks to weave
+for getting and allcoating an ip addresses to each container that is getting created.
+-when a container is deleted, weace deleted the ip adress and makes it available 
+for future containers to use.
+
+KUBE PROXY:
+component for fwding reqst from one service to another service
+whenevr you create a service
+a cluster wide service which lets you access the application from the cluster
+enables aplication eaccess to the services to the end user
+
+CORE DNS:
+- DNS servers are domain name resoution servers
+- ip address to name mapping to reach servers conveniently
+- in k8, whenever a container is generated, each gets an ip addr
+we reach to these container with a DNS name for convenience instad of the ip addr.
+- the mapping gets deleted when a container get deleted
+
+
+What is a namespace
+- not related to linux namespaces
+- Namespaces are Kubernetes objects which partition a single Kubernetes cluster 
+into multiple virtual clusters. Each Kubernetes namespace provides the scope for 
+Kubernetes Names it contains; which means that using the combination of an object 
+name and a Namespace, each object gets an unique identity across the cluster.
+
+how to create a namespace
+- kubectl create namespace <name>
+
+what is a POD?
+- a group of containers
+- A Kubernetes pod is a group of containers that are deployed together on the same host. If you frequently deploy single containers, 
+you can generally replace the word "pod" with "container" and accurately understand the concept.
+- smallest unit of an app, that represesnts something running on a cluster
+- pod vs container? -> pod can run within a node. a pod is just a gourp of containers that resides inside a node
+- can be seen as an abstraction layer on top of a container
+
+
+Pod will get an ip addr.
+all container inside that pod will share that same ip addr
+
+creating a pod with nginx container inside it:
+kubectl run myrpod --image=nginx
+kubectl get pods -n default
+unspecifeid neamespace, hence falls under the default namespace only.
+
+kubectl run myrpod --image=nginx -n dev
+^ creating a similar pod in a different namespace
+kubectl get pods
+kubectl get pods -n default
+kubectl get pods -n dev
+
+
+-o wide: (get pods wale case mein)
+1) ip address of pod
+2) as pod runs within a node, the node in which this pod is running
+
+docker ps | grep myprod
+(to validate whether something running on that ndoe or not)
+
+
+kubectl get pods -o wide -n dev
+different IP and NODE than the default one.
+
+more details about an indicidual continaer
+kubectl describe pod <name of pod> -n <namespace name (default if not entered)>
+    ^ there is a container field in the output
+        port number of container
+        port number of host
+    ^ events field
+        default cehduler is identified assigned to a node
+        etc
+        API server gets all even info from kubelet
+
+
+1) single container pods
+2) multi container pods
+3) init container pods
+4) static container pods
+
+in order to create pods, we must write a manifest 
+yaml syntax
+scalars
+dict/map
+array/list
+
+
+manifest
+
+kind:
+apiVersion:
+metadata;
+spec:
+
+
+kind is nothing ubt the resource swe create withing a k8 cluster
+a pod is a resource for example (what else?)
+resource -> can be kept into a namespace
+
+
+<missed some part ~ 15 minutes>
+
+
+LOGS of a pod
+kubectl logs
+
+can i get inside a pod?
+how do i get inside a container?
+
+kubectl exec -it mypod1 -- bash
+
+deafult restart policy of a container inside a pod.
+ubuntu contauner went out after 120 seconds.
+what did pod do? it restarted it
+
+without -f, k8 cannot understand the yaml file
+sh is for shell
+-c is for container command 
+
+to avoid restarts, in yaml file, under spec set 
+restartPolicy : never
+it is "always" by default
+
+
+how to get inside a container?
+example: 
+kubectl exec -it multi-cont-prod -c cont2 -- bash
+then run command inside that container now that you're in it
+
+
+
+<10-15 minutes missed>
+
+
+INIT CONTAINER PODS
+metadata -> init containers->
+
+- Init Containers are containers that run before the main container runs with your containerized application. 
+They normally contain setup scripts that prepares an environment for you containerized application. 
+Init Containers also ensure the wider server environment is ready for your application to start to run.
+- we can have more than one init containers also
+- without completing the init container process, the regular containers wouldn't pass
+
+
+
+
+kubernetes explain -> for help
+
+
+STATIC PODS:
+
+static_pods:
+- different charactersitics
+- when i do kubectl to create/run, kubelet is resposible. API server just passes requests.
+kublet is taking directions from API server to create a pod. 
+- static pods are ones that are NOT controlled by api server, instead directly controlled by kubelets
+- without API server, how are pods created tho? 
+
+ps -ef | grep kublet
+var/lib/kubelet.config.yml -> staticPodPath
+this is the path it is essentially looking for
+a kubelet would actually read something from a path always
+
+vi staticpod.yml -> change name to mystaticpod, and put two containers in it
+every 5 seconds, kubelet process reads this yaml file
+place this file in that path
+
+docker ps | grep mystaticpod
+
+-hence static pods are not managed by api server, directly managed by kubelet. 
+-give definition of pod to kubelet directly
+
+-static pods are visible to the api server btw.
+-appears as podname+ip of hostname where it is running
+-whenever somethig is managed by kubelt it always appends the hostname
+
+all the master components are already static pods
+api server 
+etcd
+controller manager 
+scheduler
+^ we could identify because in their names (after putting get pods -n kube-system) the hostname was concatenated
+
+
+
+etc/kubernetes/manifests/
