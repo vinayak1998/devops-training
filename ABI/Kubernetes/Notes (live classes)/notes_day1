@@ -295,3 +295,196 @@ scheduler
 
 
 etc/kubernetes/manifests/
+
+-------------------------------------------------------------------------------------
+
+
+   33  docker -v 
+   34  kubeadm version -o short 
+   35  kubelet --version 
+   36  kubectl version --short --client 
+   37  free -m
+   38  lscpu\
+   39  lscpu
+
+Master node Only 
+=====================================
+kubeadm init
+kubectl get nodes
+
+sudo mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config 
+
+kubectl get nodes
+kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"  
+
+Worker Nodes only 
+=====================================
+
+kubeadm join
+
+------------------------------------------------------------------------------------------
+
+kubectl get pods --all-namespaces
+
+
+   59  kubectl get pods --all-namespaces -o wide 
+   60  clear
+   61  kubectl get pods 
+   62  kubectl get pods --all-namespaces 
+   63  kubectl get namespaces 
+   64  kubectl get pods 
+   65  kubectl get pods -n default 
+   66  kubectl get pods -n kube-system 
+   67  clear
+   68  kubectl create namespace dev
+   69  kubectl create namespace qa
+   70  kubectl create namespace prod 
+   71  kubectl create namespace projectA
+   72  kubectl create namespace projecta
+   73  kubectl create namespace projectb
+   74  kubectl get ns
+   75  kubectl get pods -n dev 
+   76  kubectl get pods -n prod 
+
+
+   85  kubectl run mypod --image=nginx 
+   86  kubectl get pods 
+   87  kubectl get pods -n default 
+   88  kubectl get pods -n dev
+   89  kubectl run mypod --image=nginx 
+   90  kubectl run mypod --image=nginx -n dev 
+   91  kubectl get pods -n dev
+   92  kubectl get pods 
+   93  kubectl get pods -o wide 
+   94  kubectl get pods -o wide -n dev 
+   95  kubectl describe pod mypod
+
+
+   98  kubectl api-resources 
+   99  clear
+  100  kubectl explain pod 
+
+kind: Pod      # kubectl api-resources
+apiVersion: v1 # kubectl explain <resource ex: pod>
+metadata:
+  name: mypod
+  #namespace: prod
+  labels: 
+    app: web
+    env: dev
+spec:
+  containers:
+    - name: cont1
+      image: tomcat
+      ports:
+        - containerPort: 8080
+
+
+  100  kubectl explain pod 
+  101  clear
+  102  vi mypod.yml
+  103  kubectl create -f mypod.yml 
+  104  kubectl get pods 
+  105  kubectl delete pod mypod 
+  106  kubectl create -f mypod.yml 
+  107  kubectl get pods -o wide 
+  108  cat mypod.yml 
+  109  kubectl describe pod mypod 
+  110  clear
+  111  cat mypod.yml 
+  112  history 
+  113  clear
+  114  cat mypod.yml 
+  115  kubectl get pods -o wide 
+  116  kubectl get pods --show-labels 
+  117  kubectl get nodes 
+  118  ls -l
+  119  kubectl get pods 
+  120  vi mypod.yml 
+
+  123  kubectl get pods 
+  124  kubectl get pods -o wide 
+  125  kubectl get pods --show-labels 
+  126  kubectl get pods -l app=hello
+  127  kubectl get pod mypod1 -o yaml 
+  128  clear
+  129  kubectl get pod mypod1 -o yaml --client 
+  130  kubectl get pod mypod1 -o yaml 
+  131  clear
+  132  kubectl run hellopod --image=redis --dry-run=client 
+  133  kubectl get pods 
+  134  kubectl run hellopod --image=redis --dry-run=client -o yaml 
+  135  clear
+  136  kubectl get pods 
+  137  kubectl logs mypod
+  138  clear
+  139  kubectl get posd 
+  140  kubectl get pods
+
+
+  143  kubectl get pods 
+  144  kubectl exec -it mypod1 -- bash 
+  145  kubectl exec mypod1 -- ls -l /tmp
+  146  kubectl exec mypod1 -- ls -l 
+
+
+kind: Pod      # kubectl api-resources
+apiVersion: v1 # kubectl explain <resource ex: pod>
+metadata:
+  name: multi-cont-pod
+  #namespace: prod
+  labels: 
+    app: hello
+    env: qa
+spec:
+  containers:
+    - name: cont1
+      image: tomcat
+      ports:
+        - containerPort: 8080
+    - name: cont2
+      image: nginx
+      ports:
+        - containerPort: 80
+    - name: cont3
+      image: lerndevops/alpine:sleep
+    - name: cont4
+      image: ubuntu
+      command: ["sh", "-c", "sleep 120"] 
+
+  170  kubectl get pods 
+  171  kubectl exec -it multi-cont-pod -c cont2 -- bash 
+  172  kubectl logs multi-cont-pod -c cont2 
+  173  kubectl logs multi-cont-pod -c cont1
+  174  kubectl logs multi-cont-pod -c cont3
+  175  kubectl logs multi-cont-pod -c cont4
+
+
+
+  184  kubectl explain pods 
+  185  clear
+  186  kubectl explain pods.metadata
+  187  clear
+  188  kubectl explain pods.spec
+  189  clear
+  190  kubectl explain pods.spec.containers
+
+
+kind: Pod
+apiVersion: v1
+metadata: 
+  name: init-cont-pod
+  labels:
+     app: myapp
+spec:
+   containers: 
+     - name: cont1
+       image: lerndevops/nginx:app1
+       ports:
+         - containerPort: 80
+   initContainers:
+      - name: initcont1
+        image: alpine
+        command: ["sh", "-c", "sleep 60"]

@@ -1,0 +1,370 @@
+sudo kubeadm init
+
+sudo mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+## Weave
+kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"  
+
+kubectl get nodes
+kubectl get all --all-namespaces
+
+===============================================================
+
+kubeadm token create --print-join-command  (to generate join token i fone forgets)
+
+------------
+
+- kubernetes the hard way to set up a cluster is the best way. gives in depth knowledge sahi se
+- container runtime can be anything
+
+- a static pod cannot be deleted by the mager, the kubelet always recreates.
+if u want to remove, just remove the file from the manifest folder.  cd etc/kubernetes/manifests
+
+gedit var/lib/kubelet/config
+static pod path?
+
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  labels:
+     app: nginx
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+    ports:
+     - containerPort: 80
+
+
+
+whenevr you make a configuration cahnge, you must restart the service (either docker or k8) 
+for it to reflect the changes  -> systemctl kubelet restart
+
+steps:
+1) var/lib/kubelet/config.yml mein staticpod path dekho  (*worker* node mein dekho)
+2) apni nayi file banao let's say root folder mein mypod.yml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  labels:
+     app: nginx
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+    ports:
+     - containerPort: 80
+3) config file mein manifests as a static pod path ko change karke root ko daalo jisme nayi banayi hui mypod.yml hai
+hence staticPodPath: /root 
+4) uske baad check karo get pods karke
+      no change
+5) abh service restart karo master pe
+      change supposed to be relfected (yet to be tested)
+
+
+
+how do i create multiple pids from a single image
+k8 can manage pods only not containers indivdually
+by spreading pods on multiple nodes you get high availaibility 
+
+k8 controller is all aboit creating multiple pods from a single image
+
+types of contollers:
+Replication Controller
+Replicaset
+Deployment
+Daemon set
+
+Jobs
+CronJobs
+StatefulSet
+
+
+REPLICATION CONTROLLER
+
+MYRC.YML ->
+kind: ReplicationController
+apiVersion: v1 
+metadata:
+  name: myrc
+  namespace: dev
+  labels: 
+     app: myapp
+spec:
+  replicas: 4
+  selector: 
+    app: myapp
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      containers:
+        - name: cont1
+          image: nginx
+          ports:
+            - containerPort: 80
+
+
+MYRC1.YML -> (throws an error)
+kind: ReplicationController
+apiVersion: v1 
+metadata:
+  name: myrc1
+  namespace: dev
+  labels: 
+     app: myapp
+spec:
+  replicas: 4
+  selector: 
+    app: web
+  template:
+    metadata:
+      labels:
+        app: hello
+    spec:
+      containers:
+        - name: cont1
+          image: nginx
+          ports:
+            - containerPort: 80
+
+
+   65  kubectl create -f myrc.yml 
+   66  kubectl create namespace dev 
+   67  kubectl create -f myrc.yml 
+   68  kubectl get rc
+   69  kubectl get rc -n dev 
+   70  kubectl get rc -n dev -o wide 
+   71  kubectl get pods -o wide 
+   72  kubectl get pods -o wide -n dev 
+   73  kubectl 
+   74  clear
+   75  kubectl get pods -o wide -n dev 
+   76  kubectl get rc -n dev -o wide 
+   77  kubectl get pods --show-lables 
+   78  kubectl get pods --show-labels 
+   79  kubectl get pods --show-labels -n dev 
+   80  cp myrc.yml myrc1.yml
+   81  vi myrc1.yml 
+   82  kubectl create -f myrc1.yml (trhwos error)
+
+
+
+kubectl get rc                              # List all replication Controllers in current active namespace
+kubectl get rc -n <namespace>               # List the replication controllers in <namespace>
+kubectl get rc --show-labels                # list the labels for rc
+kubectl get rc -l rc=myapprc -o wide        # list replication controllers with matching labels
+kubectl get pods | grep tomcatrc            # list the pods associated with rc
+kubectl get rc tomcatrc -o yaml             # detailed object config
+
+kubectl describe rc <rcname>                # inspect the replication controller
+kubectl label rc <rcname> key=value         # label the replication controller
+kubectl scale --replicas=x rc <rcname>      # Scale replication controller
+
+to scale you can also change the replica yaml file and "apply" the changes
+kubectl apply -f myrc something karke commnad hoti hai 
+
+
+
+REPLICA SET NOW
+
+kind : ReplicaSet
+api verdion : apps/v1  (unlike just v1 in replicationController)
+baaki sab same bas spec:selector: mein ek "matchlabels:"" added hai
+
+
+kubectl get replicaset
+kubectl apply -f myrs.yml
+
+same commnad for scaling up just like replicationController 
+
+
+RS > RC
+RC provides equity based selector
+RS basically provides both equity based & set based selector 
+
+set based selector  -> set of values an be given for the selector
+^ spec:selector:matchexpressions: instead of spec:selector:matchname:
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+kind: ReplicaSet
+apiVersion: apps/v1 
+metadata:
+  name: myrs
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      containers:
+        - name: cont1
+          image: nginx
+          ports:
+            - containerPort: 80
+
+
+Replication Contrller -- equity based selector
+Relicaset  -- support both equity based selector  & set based selector 
+
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: frontend
+  labels:
+    app: sampleapp
+    tier: frontend
+spec:
+  replicas: 3
+  selector:
+    matchExpressions:
+      - {key: env, operator: NotIn, values: [production]}
+  template:
+    metadata:
+      labels:
+        env: dev
+    spec:
+      containers:
+      - name: apache
+        image: httpd
+        ports:
+         - containerPort: 80
+
+
+kubectl create -f rs-ex1.yml                # create replica set
+kubectl apply -f rs-ex1.yml                 # update replica set
+
+kubectl get rs                              # List all replica sets in current active namespace
+kubectl get rs -n <namespace>               # List the replica sets in <namespace>
+kubectl get rs --show-labels                # list the labels for rs
+kubectl get rs -l rs=myapprs -o wide        # list replica sets with matching labels
+kubectl get pods | grep tomcatrs            # list the pods associated with rs
+kubectl get rs tomcatrs -o yaml             # detailed object config
+
+kubectl describe rs <rsname>                # inspect the replica set
+kubectl label rs <rsname> key=value         # label the replica set
+kubectl scale --replicas=x rs <rsname>      # Scale up/down replica set
+kubectl delete rs <rsname>                  # delete rs & pod under it
+--------------------------------------------------------------------------------------------------------------------------------
+
+149  kubectl get pods -o wide 
+  150  curl 10.44.0.1
+  151  curl 10.44.0.5
+  152  curl 10.36.0.6
+
+--------------------------------------------------------------------------------------------------------------------------------
+
+BREAK 
+
+--------------------------------------------------------------------------------------------------------------------------------
+
+<5 - 10 minutes missed after break>
+
+
+replicaset continued
+
+limit number of replicas and if new created and get in excessm they are temrinated
+
+yaml files :- 
+
+create pods
+
+pod.yml -> (creates two pods)
+
+kind: Pod
+apiVersion: v1
+metadata: 
+  name: pod3
+  labels: 
+    app: web
+spec:
+  containers:
+    - name: cont1
+      image: nginx
+
+---
+
+kind: Pod
+apiVersion: v1
+metadata: 
+  name: pod4
+  labels:
+     app: web
+spec:
+  containers:
+    - image: tomcat
+      name: cont1
+
+
+myrs.yml ->
+
+kind: ReplicaSet
+apiVersion: apps/v1 
+metadata:
+  name: myrs
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+        - name: cont1
+          image: nginx
+          ports:
+            - containerPort: 80
+
+ 156  kubectl get rc
+  157  kubectl get rc -n dev 
+  158  kubectl delete rc myrc -n dev 
+  159  kubectl get rs 
+  160  kubectl delete rs --all
+  161  kubectl get pods 
+  162  clear
+  163  vi pod.yml
+  164  kubectl apply -f pod.yml 
+  165  kubectl get pods 
+  166  kubectl get pods -o wide 
+  167  vi myrs.yml
+  168  kubectl get pods 
+  169  kubectl get pods --show-labels 
+  170  kubectl get rs
+  171  kubectl apply -f myrs.yml 
+  172  kubectl get rs -o wide 
+  173  kubectl get pods -o wide 
+  174  vi pod.yml 
+  175  kubectl apply -f pod.yml 
+  176  kubectl get pods -o wide 
+  177  cat pod.yml 
+  178  cat myrs.yml 
+  179  clear
+  180  history 
+
+
+----------------------------------
+
+Next type of controller : DAEMON SET CONTROLLER
+
+
+
+
+
+
+
+
+
