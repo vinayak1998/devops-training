@@ -1,0 +1,33 @@
+systemctl status jenkins
+# check whether jenkins installed or not
+OR
+sudo service jenkins status
+
+#jenkins got written in java, it must be running on some port number hence.
+
+cat /etc/sysconfig/jenkins in case of centOS
+or /etc/default/jenkins in case of ubuntu
+# if permission denied -> enter sudo
+
+JENKINS_PORT = "8080"
+(we got it from above)
+
+what is ip of my machine?:
+ hostname -I
+
+https:// <ip of my machine> : 8080
+ -> jenkins welcome/login page
+ -> login jenkins credentials
+ -> wait for server reply
+ -> jenkins dashboard appears
+
+sudo cat /etc/default/jenkins and check for the port number in the output
+HTTP_PORT = "8081"
+My port, -> 8081
+so from machine browser, go to 
+http://localhost:8081
+to access the jenkins dashboard
+
+git --version
+-> git version 2.17.1
+
